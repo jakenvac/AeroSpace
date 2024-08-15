@@ -10,7 +10,8 @@ let package = Package(
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
         .library(name: "AppBundle", targets: ["AppBundle"]),
-        .executable(name: "aerospace", targets: ["Cli"])
+        .executable(name: "aerospace", targets: ["Cli"]),
+        .executable(name: "AeroSpaceApp", targets: ["AeroSpaceApp"]),
     ],
     dependencies: [
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
@@ -22,6 +23,11 @@ let package = Package(
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
     targets: [
+        .target(
+            name: "PrivateAPIBridge",
+            path: "Sources/PrivateAPIBridge",
+            publicHeadersPath: "include"
+        ),
         .target(
             name: "Common",
             dependencies: [
@@ -37,6 +43,7 @@ let package = Package(
         .target(
             name: "AppBundle",
             dependencies: [
+                .target(name: "PrivateAPIBridge"),
                 .target(name: "Common"),
                 .target(name: "ShellParserGenerated"),
                 .product(name: "Antlr4Static", package: "antlr4"),
@@ -44,6 +51,12 @@ let package = Package(
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "TOMLKit", package: "TOMLKit"),
                 .product(name: "Collections", package: "swift-collections"),
+            ]
+        ),
+        .executableTarget(
+            name: "AeroSpaceApp",
+            dependencies: [
+                .target(name: "AppBundle"),
             ]
         ),
         .executableTarget(

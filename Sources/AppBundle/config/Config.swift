@@ -1,18 +1,22 @@
 import AppKit
-import HotKey
 import Common
+import HotKey
 
 var defaultConfigUrl: URL {
-    if isUnitTest {
-        var url = URL(filePath: #file)
-        while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
-            url.deleteLastPathComponent()
-        }
-        let projectRoot: URL = url
-        return projectRoot.appending(component: "docs/config-examples/default-config.toml")
-    } else {
-        return Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+    // TODO reimplement once we've bundled the build
+    // return Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+    // if isUnitTest {
+    var url = URL(filePath: #file)
+    while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
+        url.deleteLastPathComponent()
     }
+    let projectRoot: URL = url
+    return projectRoot.appending(component: "docs/config-examples/default-config.toml")
+    // } else {
+    //     // TODO reimplement once we've bundled the build
+    //     // return Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+    //     return url.appending(component: "default-config.toml")
+    // }
 }
 let defaultConfig: Config = {
     let parsedConfig = parseConfig(try! String(contentsOf: defaultConfigUrl))
@@ -36,7 +40,7 @@ struct Config: Copyable {
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
-    var execOnWorkspaceChange: [String] = [] // todo deprecate
+    var execOnWorkspaceChange: [String] = []  // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
 

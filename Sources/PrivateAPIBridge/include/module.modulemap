@@ -1,0 +1,4 @@
+module PrivateAPIBridge {
+  header "header.h"
+  export *
+}
